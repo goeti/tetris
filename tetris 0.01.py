@@ -257,21 +257,21 @@ class TetrisApp(object):
         while 1:
             self.screen.fill((0, 0, 0))
             if self.gameover:
-                self.center_msg("""Game Over!\nYour score: %d
-Press space to continue""" % self.score)
+                self.center_msg("""Вы проиграли!\nВаши очки: %d
+нажмите пробел для продолжения""" % self.score)
             else:
                 if self.paused:
-                    self.center_msg("Paused")
+                    self.center_msg("Пауза")
                 else:
                     pygame.draw.line(self.screen,
                                      (255, 255, 255),
                                      (self.rlim + 1, 0),
                                      (self.rlim + 1, self.height - 1))
-                    self.disp_msg("Next:", (
+                    self.disp_msg("Следующая:", (
                         self.rlim + cell_size,
                         2))
-                    self.disp_msg("Score: %d\n\nLevel: %d\
-\nLines: %d" % (self.score, self.level, self.lines),
+                    self.disp_msg("Очки: %d\n\nУровень: %d\
+\nЛинии: %d" % (self.score, self.level, self.lines),
                                   (self.rlim + cell_size, cell_size * 5))
                     self.draw_matrix(self.bground_grid, (0, 0))
                     self.draw_matrix(self.board, (0, 0))
