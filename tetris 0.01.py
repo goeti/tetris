@@ -187,7 +187,7 @@ class TetrisApp(object):
                 self.stone_x = new_x
 
     def quit(self):
-        self.center_msg("Exiting...")
+        self.center_msg("Выход...")
         pygame.display.update()
         sys.exit()
 
