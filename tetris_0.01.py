@@ -70,7 +70,6 @@ class Menu(QWidget):
     def initUI(self):
         self.setWindowTitle('Тетрис')
         self.b1.clicked.connect(self.start)
-        #self.b2.clicked.connect(self.table)
         self.b3.clicked.connect(self.exite)
 
     def start(self):
@@ -97,14 +96,6 @@ class Table(QWidget):
     def initUI(self):
         self.setGeometry(500, 500, 500, 500)
         self.setWindowTitle('Таблица рекордов')
-        #self.label = QLabel(self)
-        #self.label.move(30, 30)
-        #f = open("table.txt", encoding="utf8")
-        #lines = [i[:-1] for i in f.readlines()]
-        #print(lines)
-        #self.label.setText('\n'.join(lines))
-        #self.label.adjustSize()
-        print(3)
 
 
 
@@ -412,10 +403,6 @@ class Tetris(object):
 
 
 if __name__ == '__main__':
-    #tetris = Tetris()
-    #sound = Tetrissound()
-    #sound.begin()
-    #tetris.run()
     app = QApplication(sys.argv)
     ex = Menu()
     ex.show()
