@@ -3,9 +3,9 @@ import pygame
 import sys
 
 # начальные параметры
-cell_size = 18
-cols = 11
-rows = 22
+cell_size = 20
+cols = 15
+rows = 25
 maxfps = 30
 
 # цвета
@@ -49,6 +49,22 @@ tetris_shapes = [
 class Tetrissound():
     def begin(self):
         sound1 = pygame.mixer.Sound('sound/begin.wav')
+        sound1.play()
+
+    def move(self):
+        sound1 = pygame.mixer.Sound('sound/move.wav')
+        sound1.play()
+
+    def rotate(self):
+        sound1 = pygame.mixer.Sound('sound/rotate.wav')
+        sound1.play()
+
+    def fall(self):
+        sound1 = pygame.mixer.Sound('sound/fall.wav')
+        sound1.play()
+
+    def lines_crash(self):
+        sound1 = pygame.mixer.Sound('sound/lines_crash.wav')
         sound1.play()
 
 def rotate_clockwise(shape):
@@ -181,6 +197,7 @@ class TetrisApp(object):
 
     def move(self, delta_x):
         if not self.gameover and not self.paused:
+            Tetrissound().move()
             new_x = self.stone_x + delta_x
             if new_x < 0:
                 new_x = 0
@@ -198,7 +215,9 @@ class TetrisApp(object):
 
     def drop(self, manual):
         if not self.gameover and not self.paused:
-            self.score += 1 if manual else 0
+            if manual:
+                self.score += 1
+                Tetrissound().move()
             self.stone_y += 1
             if check_collision(self.board,
                                self.stone,
@@ -212,6 +231,7 @@ class TetrisApp(object):
                 while True:
                     for i, row in enumerate(self.board[:-1]):
                         if 0 not in row:
+                            Tetrissound().lines_crash()
                             self.board = remove_row(
                                 self.board, i)
                             cleared_rows += 1
@@ -224,6 +244,7 @@ class TetrisApp(object):
 
     def insta_drop(self):
         if not self.gameover and not self.paused:
+            Tetrissound().fall()
             while (not self.drop(True)):
                 pass
 
@@ -233,6 +254,7 @@ class TetrisApp(object):
         n = 0
         n1 = 0
         if not self.gameover and not self.paused:
+            Tetrissound().rotate()
             new_stone = rotate_clockwise(self.stone)
             if self.stone_x == 0:
                 while check_collision(self.board, new_stone, (self.stone_x, self.stone_y)):
@@ -289,11 +311,11 @@ class TetrisApp(object):
                                      (self.rlim + 1, 0),
                                      (self.rlim + 1, self.height - 1))
                     self.disp_msg("Следующая:", (
-                        self.rlim + cell_size,
+                        self.rlim + cell_size // 2,
                         2))
                     self.disp_msg("Очки: %d\n\nУровень: %d\
-\nЛинии: %d" % (self.score, self.level, self.lines),
-                                  (self.rlim + cell_size, cell_size * 5))
+\nЛинии: %d\n\nУправление:\nВлево, Вправо:\n движение\nВверх:\n поворот\nВниз:\n падение\nEnter:\n мгновенное\n падение\n P:\n Пауза" % (self.score, self.level, self.lines),
+                                  (self.rlim + cell_size // 2, cell_size * 5))
                     self.draw_matrix(self.bground_grid, (0, 0))
                     self.draw_matrix(self.board, (0, 0))
                     self.draw_matrix(self.stone,
