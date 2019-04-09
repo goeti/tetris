@@ -301,7 +301,7 @@ class TetrisApp(object):
             self.screen.fill((0, 0, 0))
             if self.gameover:
                 self.center_msg("""Вы проиграли!\nВаши очки: %d
-нажмите пробел для продолжения""" % self.score)
+нажмите пробел чтобы начать заново""" % self.score)
             else:
                 if self.paused:
                     self.center_msg("Пауза")
