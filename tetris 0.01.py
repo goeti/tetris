@@ -67,10 +67,15 @@ class Tetrissound():
         sound1 = pygame.mixer.Sound('sound/lines_crash.wav')
         sound1.play()
 
+
 def rotate_clockwise(shape):
     return [[shape[y][x]
              for y in range(len(shape))]
             for x in range(len(shape[0]) - 1, -1, -1)]
+
+
+def rotate_clockwise1(shape):
+    return[list(reversed(col)) for col in zip(*shape)]
 
 
 def check_collision(board, shape, offset):
@@ -105,14 +110,14 @@ def new_board():
     return board
 
 
-class TetrisApp(object):
+class Tetris(object):
     def __init__(self):
         pygame.init()
         pygame.key.set_repeat(250, 25)
         self.width = cell_size * (cols + 6)
         self.height = cell_size * rows
         self.rlim = cell_size * cols
-        self.bground_grid = [[8 if x % 2 == y % 2 else 0 for x in range(cols)] for y in range(rows)]
+        self.bground_grid = [[8 if x % 2 == y % 2 else 8 for x in range(cols)] for y in range(rows)]
 
         self.default_font = pygame.font.Font(
             pygame.font.get_default_font(), 12)
@@ -183,7 +188,7 @@ class TetrisApp(object):
                             (off_y + y) *
                             cell_size,
                             cell_size,
-                            cell_size), 0)
+                            cell_size), 1)
 
     def add_cl_lines(self, n):
         linescores = [0, 40, 100, 300, 1200]
@@ -255,7 +260,10 @@ class TetrisApp(object):
         n1 = 0
         if not self.gameover and not self.paused:
             Tetrissound().rotate()
-            new_stone = rotate_clockwise(self.stone)
+            if self.stone_x >= (cols - 3):
+                new_stone = rotate_clockwise1(self.stone)
+            else:
+                new_stone = rotate_clockwise(self.stone)
             if self.stone_x == 0:
                 while check_collision(self.board, new_stone, (self.stone_x, self.stone_y)):
                     if n == 3:
@@ -267,7 +275,8 @@ class TetrisApp(object):
                     if n1 == 3:
                         break
                     self.stone_x -= er2[n1]
-                    n += 1
+                    n1 += 1
+
             if n != 3 and n1 != 3 and not check_collision(self.board, new_stone, (self.stone_x, self.stone_y)):
                 self.stone = new_stone
             n = 0
@@ -313,8 +322,10 @@ class TetrisApp(object):
                     self.disp_msg("Следующая:", (
                         self.rlim + cell_size // 2,
                         2))
-                    self.disp_msg("Очки: %d\n\nУровень: %d\
-\nЛинии: %d\n\nУправление:\nВлево, Вправо:\n движение\nВверх:\n поворот\nВниз:\n падение\nEnter:\n мгновенное\n падение\n P:\n Пауза" % (self.score, self.level, self.lines),
+                    self.disp_msg("Очки: %d\nУровень: %d\
+                    \nЛинии: %d\n\nУправление:\nВлево, Вправо:\n движение\nВверх:\n поворот\nВниз:"
+                                  "\n падение\nEnter:\n мгновенное\n падение\n P:\n Пауза"
+                                  % (self.score, self.level, self.lines),
                                   (self.rlim + cell_size // 2, cell_size * 5))
                     self.draw_matrix(self.bground_grid, (0, 0))
                     self.draw_matrix(self.board, (0, 0))
@@ -331,15 +342,14 @@ class TetrisApp(object):
                     self.quit()
                 elif event.type == pygame.KEYDOWN:
                     for key in key_actions:
-                        if event.key == eval("pygame.K_"
-                                             + key):
+                        if event.key == eval("pygame.K_" + key):
                             key_actions[key]()
 
             dont_burn_my_cpu.tick(maxfps)
 
 
 if __name__ == '__main__':
-    App = TetrisApp()
+    tetris = Tetris()
     sound = Tetrissound()
     sound.begin()
-    App.run()
+    tetris.run()
