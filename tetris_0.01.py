@@ -1,6 +1,9 @@
 from random import randrange as rand
 import pygame
 import sys
+from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
+from PyQt5.QtWidgets import QInputDialog
 
 # начальные параметры
 cell_size = 20
@@ -12,13 +15,25 @@ maxfps = 30
 
 colors = [
     (0, 0, 0),
-    (255, 85, 85),
-    (100, 200, 115),
-    (120, 108, 245),
-    (255, 140, 50),
-    (50, 120, 52),
-    (146, 202, 73),
-    (150, 161, 218),
+    (205, 92, 92),
+    (220, 20, 60),
+    (255, 20, 147),
+    (255, 69, 0),
+    (255, 255, 0),
+    (255, 105, 180),
+    (147, 112, 219),
+    (35, 35, 35)
+]
+
+colors2 = [
+    (0, 0, 0),
+    (30, 144, 255),
+    (0, 255, 255),
+    (173, 255, 47),
+    (50, 205, 50),
+    (0, 255, 127),
+    (32, 178, 170),
+    (0, 191, 255),
     (35, 35, 35)
 ]
 
@@ -44,6 +59,26 @@ tetris_shapes = [
     [[7, 7],
      [7, 7]]
 ]
+
+
+class Menu1(QWidget):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('menu.ui', self)
+        self.initUI()
+
+    def initUI(self):
+        self.b1.clicked.connect(self.start)
+        #self.b2.clicked.connect(self.vibor)
+        self.b3.clicked.connect(self.exite)
+
+    def start(self):
+        tetris = Tetris()
+        self.close()
+        tetris.run()
+
+    def exite(self):
+        self.close()
 
 
 class Tetrissound():
@@ -181,22 +216,22 @@ class Tetris(object):
                 if val:
                     pygame.draw.rect(
                         self.screen,
-                        colors[val],
+                        colors[val] if (self.lines // 5) % 2 == 0 else colors2[val],
                         pygame.Rect(
                             (off_x + x) *
                             cell_size,
                             (off_y + y) *
                             cell_size,
                             cell_size,
-                            cell_size), 1)
+                            cell_size), 0)
 
     def add_cl_lines(self, n):
         linescores = [0, 40, 100, 300, 1200]
         self.lines += n
         self.score += linescores[n] * self.level
-        if self.lines >= self.level * 6:
+        if self.lines >= self.level * 5:
             self.level += 1
-            newdelay = 1000 - 50 * (self.level - 1)
+            newdelay = 1000 - 100 * (self.level - 1)
             newdelay = 100 if newdelay < 100 else newdelay
             pygame.time.set_timer(pygame.USEREVENT + 1, newdelay)
 
@@ -349,7 +384,11 @@ class Tetris(object):
 
 
 if __name__ == '__main__':
-    tetris = Tetris()
-    sound = Tetrissound()
-    sound.begin()
-    tetris.run()
+    #tetris = Tetris()
+    #sound = Tetrissound()
+    #sound.begin()
+    #tetris.run()
+    app = QApplication(sys.argv)
+    ex = Example()
+    ex.show()
+    sys.exit(app.exec())
