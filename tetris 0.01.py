@@ -46,6 +46,11 @@ tetris_shapes = [
 ]
 
 
+class Tetrissound():
+    def begin(self):
+        sound1 = pygame.mixer.Sound('sound/begin.wav')
+        sound1.play()
+
 def rotate_clockwise(shape):
     return [[shape[y][x]
              for y in range(len(shape))]
@@ -223,12 +228,28 @@ class TetrisApp(object):
                 pass
 
     def rotate_stone(self):
+        er1 = [1, 2, 3]
+        er2 = [1, 2, 3]
+        n = 0
+        n1 = 0
         if not self.gameover and not self.paused:
             new_stone = rotate_clockwise(self.stone)
-            if not check_collision(self.board,
-                                   new_stone,
-                                   (self.stone_x, self.stone_y)):
+            if self.stone_x == 0:
+                while check_collision(self.board, new_stone, (self.stone_x, self.stone_y)):
+                    if n == 3:
+                        break
+                    self.stone_x += er1[n]
+                    n += 1
+            if self.stone_x == cols:
+                while check_collision(self.board, new_stone, (self.stone_x, self.stone_y)):
+                    if n1 == 3:
+                        break
+                    self.stone_x -= er2[n1]
+                    n += 1
+            if n != 3 and n1 != 3 and not check_collision(self.board, new_stone, (self.stone_x, self.stone_y)):
                 self.stone = new_stone
+            n = 0
+            n1 = 0
 
     def toggle_pause(self):
         self.paused = not self.paused
@@ -297,4 +318,6 @@ class TetrisApp(object):
 
 if __name__ == '__main__':
     App = TetrisApp()
+    sound = Tetrissound()
+    sound.begin()
     App.run()
