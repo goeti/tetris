@@ -2,7 +2,7 @@ from random import randrange as rand
 import pygame
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel
 from PyQt5.QtWidgets import QInputDialog
 
 # начальные параметры
@@ -61,15 +61,16 @@ tetris_shapes = [
 ]
 
 
-class Menu1(QWidget):
+class Menu(QWidget):
     def __init__(self):
         super().__init__()
         uic.loadUi('menu.ui', self)
         self.initUI()
 
     def initUI(self):
+        self.setWindowTitle('Тетрис')
         self.b1.clicked.connect(self.start)
-        #self.b2.clicked.connect(self.vibor)
+        #self.b2.clicked.connect(self.table)
         self.b3.clicked.connect(self.exite)
 
     def start(self):
@@ -79,6 +80,32 @@ class Menu1(QWidget):
 
     def exite(self):
         self.close()
+
+    def table(self):
+        app = QApplication(sys.argv)
+        print(0)
+        w = Table()
+        w.show()
+        print(2)
+
+
+class Table(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setGeometry(500, 500, 500, 500)
+        self.setWindowTitle('Таблица рекордов')
+        #self.label = QLabel(self)
+        #self.label.move(30, 30)
+        #f = open("table.txt", encoding="utf8")
+        #lines = [i[:-1] for i in f.readlines()]
+        #print(lines)
+        #self.label.setText('\n'.join(lines))
+        #self.label.adjustSize()
+        print(3)
+
 
 
 class Tetrissound():
@@ -324,6 +351,7 @@ class Tetris(object):
         if self.gameover:
             self.init_game()
             self.gameover = False
+            self.v = 0
 
     def run(self):
         key_actions = {
@@ -389,6 +417,6 @@ if __name__ == '__main__':
     #sound.begin()
     #tetris.run()
     app = QApplication(sys.argv)
-    ex = Example()
+    ex = Menu()
     ex.show()
     sys.exit(app.exec())
